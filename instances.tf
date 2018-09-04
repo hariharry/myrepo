@@ -1,16 +1,13 @@
-############ RDS ##################
-resource "aws_db_instance" "default" {
-  allocated_storage    = 10
-  storage_type         = "gp2"
-  engine               = "mysql"
-  engine_version       = "5.7"
-  instance_class       = "db.t2.micro"
-  name                 = "mydb"
-  username             = "dbuser"
-  password             = "user1234"
-  parameter_group_name = "default.mysql5.7"
-  db_subnet_group_name = "${aws_db_subnet_group.dbsubnet.name}"
-  skip_final_snapshot  = true
-  //security_group_id  = "sg-123456"
-  security_group_names = ["${aws_security_group_rule.mysql.id}"]
+resource "aws_instance" "web" {
+  count	 	  = "${length(var.web_ec2_count)}"
+  ami             = "${data.aws_ami.ubuntu.id}"
+  instance_type   = "t2.micro"
+  subnet_id       = "${ element(aws_subnet.public_subnets.*.id,count.index) }"
+  key_name        = "${var.key_value}"
+  associate_public_ip_address = true
+  security_groups = [ "${aws_security_group.web.id}"]
+ 
+ tags {
+    Name = "web-${count.index +1} "
+  }
 }

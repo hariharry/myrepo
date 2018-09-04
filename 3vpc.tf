@@ -86,10 +86,8 @@ resource "aws_eip" "elastic_ip" {
 #################### DB SUBNET #################
 
 resource "aws_db_subnet_group" "dbsubnet" {
-# count      ="${length(var.db-subnets)}"
   name       = "main"
-# subnet_ids = ["${element(aws_subnet.private_subnets.*.id, count.index )}"]
-  subnet_ids =["${aws_subnet.private_subnets.*.id}","aws_subnet.private_subnets-2.*.id}"]
+  subnet_ids = ["${aws_subnet.private_subnets.*.id}"] #,"${aws_subnet.private_subnets.3.id}"]
   tags {
     Name = "MyDBsubnetGroup"
  }

@@ -27,10 +27,16 @@ variable "public_subnet_cidrs" {
 }
 variable "pri-azs" {
   type = "list"
-  default =["us-east-1a","us-east-1a","us-east-1b","us-east-1b"]
+  default =["us-east-1a","us-east-1b","us-east-1a","us-east-1b"]
 }
 variable "pub-azs" {
   type = "list"
   default =["us-east-1a","us-east-1b"]
+}
+variable "web_ec2_count" {
+ default = 2
+}
+variable "key_value" {
+ default="us-east-1"
 }
 
