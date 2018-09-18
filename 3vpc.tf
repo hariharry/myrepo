@@ -23,6 +23,17 @@ resource "aws_subnet" "private_subnets" {
     Name = "private-Subnet-${count.index +1}"
   }
 }
+resource "aws_subnet" "private_db" {
+  count             = "${length(var.db-subnets)}"
+  vpc_id            = "${aws_vpc.myvpc.id}"
+  cidr_block        = "${element(var.private_db_cidrs,count.index)}"
+  availability_zone = "${element(var.pri-azs-db,count.index)}"
+
+  tags = {
+    Name = "private-db-${count.index +1}"
+  }
+}
+
 
 resource "aws_subnet" "public_subnets" {
   count                   = "${length(var.public-subnets)}"
@@ -75,10 +86,10 @@ resource "aws_route_table_association" "public_subnet_association" {
 #################### NAT #### EIP #########
 # adding an elastic IP
 
-resource "aws_eip" "elastic_ip" {
-  vpc        = true
-  depends_on = ["aws_internet_gateway.internet_gateway"]
-}
+#resource "aws_eip" "elastic_ip" {
+#  vpc        = true
+#  depends_on = ["aws_internet_gateway.internet_gateway"]
+#}
 
 # creating the NAT gateway
 
@@ -87,7 +98,7 @@ resource "aws_eip" "elastic_ip" {
 
 resource "aws_db_subnet_group" "dbsubnet" {
   name       = "main"
-  subnet_ids = ["${aws_subnet.private_subnets.*.id}"] #,"${aws_subnet.private_subnets.3.id}"]
+  subnet_ids = ["${aws_subnet.private_db.*.id}"] 
   tags {
     Name = "MyDBsubnetGroup"
  }

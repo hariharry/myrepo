@@ -1,5 +1,5 @@
 resource "aws_instance" "web" {
-  count	 	  = "${length(var.web_ec2_count)}"
+  count	 	  ="${var.web_ec2_count}"
   ami             = "${data.aws_ami.ubuntu.id}"
   instance_type   = "t2.micro"
   subnet_id       = "${ element(aws_subnet.public_subnets.*.id,count.index) }"
