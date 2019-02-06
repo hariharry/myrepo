@@ -93,6 +93,13 @@ resource "aws_route_table_association" "public_subnet_association" {
 
 # creating the NAT gateway
 
+resource "aws_nat_gateway" "nat" {
+  count         = "${length(var.public-subnets}"
+  allocation_id = "${ aws_eip.elastic_ip.id }"
+  subnet_id     = "${ element(aws_subnet.public_subnets.*.id, 0) }"
+  depends_on    = ["aws_internet_gateway.internet_gateway"]
+  }
+
 
 #################### DB SUBNET #################
 
